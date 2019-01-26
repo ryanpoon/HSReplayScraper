@@ -114,9 +114,10 @@ void (async () => {
 		// Makes sure you aren't already logged in
 		if (await page.url() == 'https://hsreplay.net/account/login/?next=%2F') {
 
-		// Clicking a button to navigate to Blizzard
+			// Clicking a button to navigate to Blizzard
+			const waitBlizzard = page.waitForNavigation({waitUntil: 'networkidle0'})
 			await page.click('body > div.container > div > form > p:nth-child(2) > button')
-			await page.waitForNavigation({waitUntil: 'networkidle0'})
+			await waitBlizzard
 			
 			// Fills out login credentials for Blizzard
 			await page.click(SELECTORS.emailField)
@@ -161,4 +162,5 @@ void (async () => {
 		}
 	}
 	await browser.close()
+	process.exit()
 })()
