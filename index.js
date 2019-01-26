@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 require('mongoose-double')(mongoose)
 const os = require('os')
 const args = []
+var headless = false
 
 const SchemaTypes = mongoose.Schema.Types
 const Datapoints = require('./models/datapoints')
@@ -88,6 +89,7 @@ if (os.platform() == 'linux') {
 	args.push('--no-sandbox')
 	args.push('--disable-setuid-sandbox')
 	args.push('--disable-gpu')
+	headless = true
 
 }
 
@@ -97,7 +99,7 @@ void (async () => {
 	let tries = 10
 
 	// Creating a Chromium browser through puppeteer
-	const browser = await puppeteer.launch({args: args, headless: false})
+	const browser = await puppeteer.launch({args: args, headless: headless})
 
 	// Repeats until no more tries remaining
 	while (tries-- > 0) {
