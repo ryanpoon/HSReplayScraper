@@ -3,6 +3,8 @@ const CREDS = require('./creds')
 const SELECTORS = require('./selectors')
 const mongoose = require('mongoose')
 require('mongoose-double')(mongoose)
+const os = require('os')
+const args = []
 
 const SchemaTypes = mongoose.Schema.Types
 const Datapoints = require('./models/datapoints')
@@ -12,7 +14,7 @@ const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
 function insertDataPoint(dataPoint) {
 	// Connects to database and adds a document to a collection
 
-	const DB_URL = 'mongodb://localhost:27017/HSReplayData'
+	const DB_URL = 'mongodb://server.ryanpoon.com:39898/HSReplayData'
 	if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL, { useNewUrlParser: true }); console.log('Successfully Connected to Database at ' + DB_URL);}
 	Datapoints.create(dataPoint)
 }
@@ -82,13 +84,20 @@ async function getPopularity(page, numArchetypes) {
 
 }
 
+if (os.platform() == 'linux') {
+	args.push('--no-sandbox')
+	args.push('--disable-setuid-sandbox')
+	args.push('--disable-gpu')
+
+}
+
 void (async () => {
 
 	// Setting the number of tries alloted to find the data
 	let tries = 10
 
 	// Creating a Chromium browser through puppeteer
-	const browser = await puppeteer.launch({headless: false})
+	const browser = await puppeteer.launch({args: args, headless: false})
 
 	// Repeats until no more tries remaining
 	while (tries-- > 0) {
