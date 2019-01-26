@@ -40,7 +40,7 @@ jspm_packages/
 screenshots/
 pdfs/
 json/
-cred.js
+creds.js
 
 
 # TypeScript v1 declaration files
